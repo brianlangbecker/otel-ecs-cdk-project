@@ -1,0 +1,36 @@
+{
+  "version": "48.0.0",
+  "files": {
+    "7fa1e366ee8a9ded01fc355f704cff92bfd179574e6f9cfee800a3541df1b200": {
+      "displayName": "OtelEcsStack/Custom::VpcRestrictDefaultSGCustomResourceProvider Code",
+      "source": {
+        "path": "asset.7fa1e366ee8a9ded01fc355f704cff92bfd179574e6f9cfee800a3541df1b200",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "465062709130-us-east-1-420001b3": {
+          "bucketName": "cdk-hnb659fds-assets-465062709130-us-east-1",
+          "objectKey": "7fa1e366ee8a9ded01fc355f704cff92bfd179574e6f9cfee800a3541df1b200.zip",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::465062709130:role/cdk-hnb659fds-file-publishing-role-465062709130-us-east-1"
+        }
+      }
+    },
+    "a6e0ae21ebbc1846a55dd9803071bdd9dec0141b3de57374c6b1b7ac84d9c9d4": {
+      "displayName": "OtelEcsStack Template",
+      "source": {
+        "path": "OtelEcsStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "465062709130-us-east-1-ea839125": {
+          "bucketName": "cdk-hnb659fds-assets-465062709130-us-east-1",
+          "objectKey": "a6e0ae21ebbc1846a55dd9803071bdd9dec0141b3de57374c6b1b7ac84d9c9d4.json",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::465062709130:role/cdk-hnb659fds-file-publishing-role-465062709130-us-east-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

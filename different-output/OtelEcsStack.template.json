@@ -1,0 +1,1272 @@
+{
+ "Resources": {
+  "VPCB9E5F0B4": {
+   "Type": "AWS::EC2::VPC",
+   "Properties": {
+    "CidrBlock": "10.0.0.0/16",
+    "EnableDnsHostnames": true,
+    "EnableDnsSupport": true,
+    "InstanceTenancy": "default",
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "OtelEcsStack/VPC"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/VPC/Resource"
+   }
+  },
+  "VPCPublicSubnet1SubnetB4246D30": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1a",
+    "CidrBlock": "10.0.0.0/18",
+    "MapPublicIpOnLaunch": true,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Public"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Public"
+     },
+     {
+      "Key": "Name",
+      "Value": "OtelEcsStack/VPC/PublicSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "VPCB9E5F0B4"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/VPC/PublicSubnet1/Subnet"
+   }
+  },
+  "VPCPublicSubnet1RouteTableFEE4B781": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "OtelEcsStack/VPC/PublicSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "VPCB9E5F0B4"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/VPC/PublicSubnet1/RouteTable"
+   }
+  },
+  "VPCPublicSubnet1RouteTableAssociation0B0896DC": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "VPCPublicSubnet1RouteTableFEE4B781"
+    },
+    "SubnetId": {
+     "Ref": "VPCPublicSubnet1SubnetB4246D30"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/VPC/PublicSubnet1/RouteTableAssociation"
+   }
+  },
+  "VPCPublicSubnet1DefaultRoute91CEF279": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": {
+     "Ref": "VPCIGWB7E252D3"
+    },
+    "RouteTableId": {
+     "Ref": "VPCPublicSubnet1RouteTableFEE4B781"
+    }
+   },
+   "DependsOn": [
+    "VPCVPCGW99B986DC"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/VPC/PublicSubnet1/DefaultRoute"
+   }
+  },
+  "VPCPublicSubnet1EIP6AD938E8": {
+   "Type": "AWS::EC2::EIP",
+   "Properties": {
+    "Domain": "vpc",
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "OtelEcsStack/VPC/PublicSubnet1"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/VPC/PublicSubnet1/EIP"
+   }
+  },
+  "VPCPublicSubnet1NATGatewayE0556630": {
+   "Type": "AWS::EC2::NatGateway",
+   "Properties": {
+    "AllocationId": {
+     "Fn::GetAtt": [
+      "VPCPublicSubnet1EIP6AD938E8",
+      "AllocationId"
+     ]
+    },
+    "SubnetId": {
+     "Ref": "VPCPublicSubnet1SubnetB4246D30"
+    },
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "OtelEcsStack/VPC/PublicSubnet1"
+     }
+    ]
+   },
+   "DependsOn": [
+    "VPCPublicSubnet1DefaultRoute91CEF279",
+    "VPCPublicSubnet1RouteTableAssociation0B0896DC"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/VPC/PublicSubnet1/NATGateway"
+   }
+  },
+  "VPCPublicSubnet2Subnet74179F39": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1b",
+    "CidrBlock": "10.0.64.0/18",
+    "MapPublicIpOnLaunch": true,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Public"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Public"
+     },
+     {
+      "Key": "Name",
+      "Value": "OtelEcsStack/VPC/PublicSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "VPCB9E5F0B4"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/VPC/PublicSubnet2/Subnet"
+   }
+  },
+  "VPCPublicSubnet2RouteTable6F1A15F1": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "OtelEcsStack/VPC/PublicSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "VPCB9E5F0B4"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/VPC/PublicSubnet2/RouteTable"
+   }
+  },
+  "VPCPublicSubnet2RouteTableAssociation5A808732": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "VPCPublicSubnet2RouteTable6F1A15F1"
+    },
+    "SubnetId": {
+     "Ref": "VPCPublicSubnet2Subnet74179F39"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/VPC/PublicSubnet2/RouteTableAssociation"
+   }
+  },
+  "VPCPublicSubnet2DefaultRouteB7481BBA": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": {
+     "Ref": "VPCIGWB7E252D3"
+    },
+    "RouteTableId": {
+     "Ref": "VPCPublicSubnet2RouteTable6F1A15F1"
+    }
+   },
+   "DependsOn": [
+    "VPCVPCGW99B986DC"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/VPC/PublicSubnet2/DefaultRoute"
+   }
+  },
+  "VPCPrivateSubnet1Subnet8BCA10E0": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1a",
+    "CidrBlock": "10.0.128.0/18",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Private"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Private"
+     },
+     {
+      "Key": "Name",
+      "Value": "OtelEcsStack/VPC/PrivateSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "VPCB9E5F0B4"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/VPC/PrivateSubnet1/Subnet"
+   }
+  },
+  "VPCPrivateSubnet1RouteTableBE8A6027": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "OtelEcsStack/VPC/PrivateSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "VPCB9E5F0B4"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/VPC/PrivateSubnet1/RouteTable"
+   }
+  },
+  "VPCPrivateSubnet1RouteTableAssociation347902D1": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "VPCPrivateSubnet1RouteTableBE8A6027"
+    },
+    "SubnetId": {
+     "Ref": "VPCPrivateSubnet1Subnet8BCA10E0"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/VPC/PrivateSubnet1/RouteTableAssociation"
+   }
+  },
+  "VPCPrivateSubnet1DefaultRouteAE1D6490": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "NatGatewayId": {
+     "Ref": "VPCPublicSubnet1NATGatewayE0556630"
+    },
+    "RouteTableId": {
+     "Ref": "VPCPrivateSubnet1RouteTableBE8A6027"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/VPC/PrivateSubnet1/DefaultRoute"
+   }
+  },
+  "VPCPrivateSubnet2SubnetCFCDAA7A": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1b",
+    "CidrBlock": "10.0.192.0/18",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Private"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Private"
+     },
+     {
+      "Key": "Name",
+      "Value": "OtelEcsStack/VPC/PrivateSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "VPCB9E5F0B4"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/VPC/PrivateSubnet2/Subnet"
+   }
+  },
+  "VPCPrivateSubnet2RouteTable0A19E10E": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "OtelEcsStack/VPC/PrivateSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "VPCB9E5F0B4"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/VPC/PrivateSubnet2/RouteTable"
+   }
+  },
+  "VPCPrivateSubnet2RouteTableAssociation0C73D413": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "VPCPrivateSubnet2RouteTable0A19E10E"
+    },
+    "SubnetId": {
+     "Ref": "VPCPrivateSubnet2SubnetCFCDAA7A"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/VPC/PrivateSubnet2/RouteTableAssociation"
+   }
+  },
+  "VPCPrivateSubnet2DefaultRouteF4F5CFD2": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "NatGatewayId": {
+     "Ref": "VPCPublicSubnet1NATGatewayE0556630"
+    },
+    "RouteTableId": {
+     "Ref": "VPCPrivateSubnet2RouteTable0A19E10E"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/VPC/PrivateSubnet2/DefaultRoute"
+   }
+  },
+  "VPCIGWB7E252D3": {
+   "Type": "AWS::EC2::InternetGateway",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "OtelEcsStack/VPC"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/VPC/IGW"
+   }
+  },
+  "VPCVPCGW99B986DC": {
+   "Type": "AWS::EC2::VPCGatewayAttachment",
+   "Properties": {
+    "InternetGatewayId": {
+     "Ref": "VPCIGWB7E252D3"
+    },
+    "VpcId": {
+     "Ref": "VPCB9E5F0B4"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/VPC/VPCGW"
+   }
+  },
+  "VPCRestrictDefaultSecurityGroupCustomResource59474679": {
+   "Type": "Custom::VpcRestrictDefaultSG",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "CustomVpcRestrictDefaultSGCustomResourceProviderHandlerDC833E5E",
+      "Arn"
+     ]
+    },
+    "DefaultSecurityGroupId": {
+     "Fn::GetAtt": [
+      "VPCB9E5F0B4",
+      "DefaultSecurityGroup"
+     ]
+    },
+    "Account": "465062709130"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/VPC/RestrictDefaultSecurityGroupCustomResource/Default"
+   }
+  },
+  "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Version": "2012-10-17",
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ]
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+     }
+    ],
+    "Policies": [
+     {
+      "PolicyName": "Inline",
+      "PolicyDocument": {
+       "Version": "2012-10-17",
+       "Statement": [
+        {
+         "Effect": "Allow",
+         "Action": [
+          "ec2:AuthorizeSecurityGroupIngress",
+          "ec2:AuthorizeSecurityGroupEgress",
+          "ec2:RevokeSecurityGroupIngress",
+          "ec2:RevokeSecurityGroupEgress"
+         ],
+         "Resource": [
+          {
+           "Fn::Join": [
+            "",
+            [
+             "arn:aws:ec2:us-east-1:465062709130:security-group/",
+             {
+              "Fn::GetAtt": [
+               "VPCB9E5F0B4",
+               "DefaultSecurityGroup"
+              ]
+             }
+            ]
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/Custom::VpcRestrictDefaultSGCustomResourceProvider/Role"
+   }
+  },
+  "CustomVpcRestrictDefaultSGCustomResourceProviderHandlerDC833E5E": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-465062709130-us-east-1",
+     "S3Key": "7fa1e366ee8a9ded01fc355f704cff92bfd179574e6f9cfee800a3541df1b200.zip"
+    },
+    "Timeout": 900,
+    "MemorySize": 128,
+    "Handler": "__entrypoint__.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs22.x",
+    "Description": "Lambda function for removing all inbound/outbound rules from the VPC default security group"
+   },
+   "DependsOn": [
+    "CustomVpcRestrictDefaultSGCustomResourceProviderRole26592FE0"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/Custom::VpcRestrictDefaultSGCustomResourceProvider/Handler",
+    "aws:asset:path": "asset.7fa1e366ee8a9ded01fc355f704cff92bfd179574e6f9cfee800a3541df1b200",
+    "aws:asset:property": "Code"
+   }
+  },
+  "ClusterEB0386A7": {
+   "Type": "AWS::ECS::Cluster",
+   "Properties": {
+    "ClusterName": "otel-cluster"
+   },
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/Cluster/Resource"
+   }
+  },
+  "OtelConfigB7019AC4": {
+   "Type": "AWS::SSM::Parameter",
+   "Properties": {
+    "Description": "OpenTelemetry Collector Configuration",
+    "Name": "/otel/collector/config",
+    "Type": "String",
+    "Value": "# OpenTelemetry Collector Configuration for ECS/Honeycomb\n# Adapted from working configuration template\n\nextensions:\n  pprof:\n    endpoint: 0.0.0.0:1777\n  \n  # Debug logging extension\n  zpages:\n    endpoint: 0.0.0.0:55679\n  \n  # Health check extension\n  health_check:\n    endpoint: 0.0.0.0:13133\n\nreceivers:\n  # Prometheus receiver for scraping collector metrics\n  prometheus:\n    config:\n      scrape_configs:\n        - job_name: 'otel-collector'\n          scrape_interval: 30s\n          static_configs:\n            - targets: ['localhost:8888']\n\n  otlp:\n    protocols:\n      grpc:\n        endpoint: 0.0.0.0:4317\n        include_metadata: true\n        keepalive:\n          server_parameters:\n            max_connection_age: 1m0s\n            max_connection_age_grace: 5m0s\n            max_connection_idle: 1m0s\n            time: 2h\n            timeout: 20s\n        max_recv_msg_size_mib: 4\n      http:\n        endpoint: 0.0.0.0:4318\n        include_metadata: true\n\nprocessors:\n  batch:\n    send_batch_max_size: 1024\n    send_batch_size: 512\n    timeout: 1s\n\n  memory_limiter:\n    limit_mib: 512\n    spike_limit_mib: 128\n    check_interval: 1s\n\n  resource:\n    attributes:\n      - key: service.name\n        value: \"otel-collector-ecs\"\n        action: upsert\n      - key: deployment.environment\n        value: \"production\"\n        action: upsert\n\nexporters:\n  # Debug exporter to see what data is flowing\n  debug:\n    verbosity: detailed\n\n  # Direct Honeycomb trace exporter\n  otlp/honeycomb_direct_traces:\n    compression: gzip\n    endpoint: ${HONEYCOMB_ENDPOINT}:443\n    headers:\n      x-honeycomb-team: ${HONEYCOMB_API_KEY}\n      x-honeycomb-dataset: ${HONEYCOMB_DATASET}\n    retry_on_failure:\n      enabled: true\n      initial_interval: 5s\n      max_elapsed_time: 300s\n      max_interval: 30s\n    sending_queue:\n      enabled: true\n    tls:\n      insecure: false\n\n  # Direct Honeycomb metrics exporter\n  otlp/honeycomb_direct_metrics:\n    compression: gzip\n    endpoint: ${HONEYCOMB_ENDPOINT}:443\n    headers:\n      x-honeycomb-team: ${HONEYCOMB_API_KEY}\n      x-honeycomb-dataset: otel-collector-metrics\n    retry_on_failure:\n      enabled: true\n      initial_interval: 5s\n      max_elapsed_time: 300s\n      max_interval: 30s\n    sending_queue:\n      enabled: true\n    tls:\n      insecure: false\n\n  # Collector operational metrics exporter\n  otlp/honeycomb_collector_metrics:\n    compression: gzip\n    endpoint: ${HONEYCOMB_ENDPOINT}:443\n    headers:\n      x-honeycomb-team: ${HONEYCOMB_API_KEY}\n      x-honeycomb-dataset: collector-operations\n    retry_on_failure:\n      enabled: true\n      initial_interval: 5s\n      max_elapsed_time: 300s\n      max_interval: 30s\n    sending_queue:\n      enabled: true\n    tls:\n      insecure: false\n\nservice:\n  extensions: [pprof, zpages, health_check]\n  telemetry:\n    logs:\n      level: debug\n      development: true\n      encoding: console\n    metrics:\n      level: detailed\n  pipelines:\n    # Application traces pipeline\n    traces:\n      receivers:\n        - otlp\n      processors:\n        - memory_limiter\n        - resource\n        - batch\n      exporters:\n        - debug\n        - otlp/honeycomb_direct_traces\n\n    # Application metrics pipeline\n    metrics:\n      receivers:\n        - otlp\n      processors:\n        - memory_limiter\n        - batch\n      exporters:\n        - debug\n        - otlp/honeycomb_direct_metrics\n\n    # Collector operational metrics pipeline\n    metrics/collector_operations:\n      receivers:\n        - prometheus\n      processors:\n        - batch\n      exporters:\n        - debug\n        - otlp/honeycomb_collector_metrics"
+   },
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/OtelConfig/OtelConfig/Resource"
+   }
+  },
+  "ALBAEE750D2": {
+   "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+   "Properties": {
+    "LoadBalancerAttributes": [
+     {
+      "Key": "deletion_protection.enabled",
+      "Value": "false"
+     }
+    ],
+    "Name": "otel-alb",
+    "Scheme": "internet-facing",
+    "SecurityGroups": [
+     {
+      "Fn::GetAtt": [
+       "ALBSecurityGroup8B8624F8",
+       "GroupId"
+      ]
+     }
+    ],
+    "Subnets": [
+     {
+      "Ref": "VPCPublicSubnet1SubnetB4246D30"
+     },
+     {
+      "Ref": "VPCPublicSubnet2Subnet74179F39"
+     }
+    ],
+    "Type": "application"
+   },
+   "DependsOn": [
+    "VPCPublicSubnet1DefaultRoute91CEF279",
+    "VPCPublicSubnet1RouteTableAssociation0B0896DC",
+    "VPCPublicSubnet2DefaultRouteB7481BBA",
+    "VPCPublicSubnet2RouteTableAssociation5A808732"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/ALB/Resource"
+   }
+  },
+  "ALBSecurityGroup8B8624F8": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "Automatically created Security Group for ELB OtelEcsStackALB66F0F366",
+    "SecurityGroupIngress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow from anyone on port 4317",
+      "FromPort": 4317,
+      "IpProtocol": "tcp",
+      "ToPort": 4317
+     },
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow from anyone on port 4318",
+      "FromPort": 4318,
+      "IpProtocol": "tcp",
+      "ToPort": 4318
+     }
+    ],
+    "VpcId": {
+     "Ref": "VPCB9E5F0B4"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/ALB/SecurityGroup/Resource"
+   }
+  },
+  "ALBSecurityGrouptoOtelEcsStackOtelCollectorServiceSecurityGroup471F1F0B43173E56FE31": {
+   "Type": "AWS::EC2::SecurityGroupEgress",
+   "Properties": {
+    "Description": "Load balancer to target",
+    "DestinationSecurityGroupId": {
+     "Fn::GetAtt": [
+      "OtelCollectorServiceSecurityGroup65FB73B9",
+      "GroupId"
+     ]
+    },
+    "FromPort": 4317,
+    "GroupId": {
+     "Fn::GetAtt": [
+      "ALBSecurityGroup8B8624F8",
+      "GroupId"
+     ]
+    },
+    "IpProtocol": "tcp",
+    "ToPort": 4317
+   },
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/ALB/SecurityGroup/to OtelEcsStackOtelCollectorServiceSecurityGroup471F1F0B:4317"
+   }
+  },
+  "ALBSecurityGrouptoOtelEcsStackOtelCollectorServiceSecurityGroup471F1F0B43181C98E794": {
+   "Type": "AWS::EC2::SecurityGroupEgress",
+   "Properties": {
+    "Description": "ALB to OTLP HTTP",
+    "DestinationSecurityGroupId": {
+     "Fn::GetAtt": [
+      "OtelCollectorServiceSecurityGroup65FB73B9",
+      "GroupId"
+     ]
+    },
+    "FromPort": 4318,
+    "GroupId": {
+     "Fn::GetAtt": [
+      "ALBSecurityGroup8B8624F8",
+      "GroupId"
+     ]
+    },
+    "IpProtocol": "tcp",
+    "ToPort": 4318
+   },
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/ALB/SecurityGroup/to OtelEcsStackOtelCollectorServiceSecurityGroup471F1F0B:4318"
+   }
+  },
+  "ALBSecurityGrouptoOtelEcsStackOtelCollectorServiceSecurityGroup471F1F0B1313352A9FB8F": {
+   "Type": "AWS::EC2::SecurityGroupEgress",
+   "Properties": {
+    "Description": "ALB to Health Check",
+    "DestinationSecurityGroupId": {
+     "Fn::GetAtt": [
+      "OtelCollectorServiceSecurityGroup65FB73B9",
+      "GroupId"
+     ]
+    },
+    "FromPort": 13133,
+    "GroupId": {
+     "Fn::GetAtt": [
+      "ALBSecurityGroup8B8624F8",
+      "GroupId"
+     ]
+    },
+    "IpProtocol": "tcp",
+    "ToPort": 13133
+   },
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/ALB/SecurityGroup/to OtelEcsStackOtelCollectorServiceSecurityGroup471F1F0B:13133"
+   }
+  },
+  "ALBGrpcListenerF89B142B": {
+   "Type": "AWS::ElasticLoadBalancingV2::Listener",
+   "Properties": {
+    "DefaultActions": [
+     {
+      "TargetGroupArn": {
+       "Ref": "OtelTargetGroupF7AAF47B"
+      },
+      "Type": "forward"
+     }
+    ],
+    "LoadBalancerArn": {
+     "Ref": "ALBAEE750D2"
+    },
+    "Port": 4317,
+    "Protocol": "HTTP"
+   },
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/ALB/GrpcListener/Resource"
+   }
+  },
+  "ALBHttpListener04CE8CD0": {
+   "Type": "AWS::ElasticLoadBalancingV2::Listener",
+   "Properties": {
+    "DefaultActions": [
+     {
+      "TargetGroupArn": {
+       "Ref": "OtelHttpTargetGroupB76D6E76"
+      },
+      "Type": "forward"
+     }
+    ],
+    "LoadBalancerArn": {
+     "Ref": "ALBAEE750D2"
+    },
+    "Port": 4318,
+    "Protocol": "HTTP"
+   },
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/ALB/HttpListener/Resource"
+   }
+  },
+  "OtelTargetGroupF7AAF47B": {
+   "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+   "Properties": {
+    "HealthCheckIntervalSeconds": 30,
+    "HealthCheckPath": "/",
+    "HealthCheckPort": "13133",
+    "HealthCheckProtocol": "HTTP",
+    "HealthCheckTimeoutSeconds": 5,
+    "HealthyThresholdCount": 2,
+    "Port": 4317,
+    "Protocol": "HTTP",
+    "TargetGroupAttributes": [
+     {
+      "Key": "stickiness.enabled",
+      "Value": "false"
+     }
+    ],
+    "TargetType": "ip",
+    "UnhealthyThresholdCount": 5,
+    "VpcId": {
+     "Ref": "VPCB9E5F0B4"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/OtelTargetGroup/Resource"
+   }
+  },
+  "OtelHttpTargetGroupB76D6E76": {
+   "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+   "Properties": {
+    "HealthCheckIntervalSeconds": 30,
+    "HealthCheckPath": "/",
+    "HealthCheckPort": "13133",
+    "HealthCheckProtocol": "HTTP",
+    "HealthCheckTimeoutSeconds": 5,
+    "HealthyThresholdCount": 2,
+    "Port": 4318,
+    "Protocol": "HTTP",
+    "TargetGroupAttributes": [
+     {
+      "Key": "stickiness.enabled",
+      "Value": "false"
+     }
+    ],
+    "TargetType": "ip",
+    "UnhealthyThresholdCount": 5,
+    "VpcId": {
+     "Ref": "VPCB9E5F0B4"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/OtelHttpTargetGroup/Resource"
+   }
+  },
+  "OtelCollectorExecutionRole3A949A45": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "ecs-tasks.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/OtelCollector/ExecutionRole/Resource"
+   }
+  },
+  "OtelCollectorExecutionRoleDefaultPolicy3B9AA640": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "OtelCollectorLogGroup35AE2EF9",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
+        "ssm:DescribeParameters",
+        "ssm:GetParameter",
+        "ssm:GetParameterHistory",
+        "ssm:GetParameters"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:aws:ssm:us-east-1:465062709130:parameter",
+          {
+           "Ref": "OtelConfigB7019AC4"
+          }
+         ]
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "OtelCollectorExecutionRoleDefaultPolicy3B9AA640",
+    "Roles": [
+     {
+      "Ref": "OtelCollectorExecutionRole3A949A45"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/OtelCollector/ExecutionRole/DefaultPolicy/Resource"
+   }
+  },
+  "OtelCollectorTaskRoleF18C07E7": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "ecs-tasks.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "Policies": [
+     {
+      "PolicyDocument": {
+       "Statement": [
+        {
+         "Action": "ssm:GetParameter",
+         "Effect": "Allow",
+         "Resource": {
+          "Fn::Join": [
+           "",
+           [
+            "arn:aws:ssm:us-east-1:465062709130:parameter",
+            {
+             "Ref": "OtelConfigB7019AC4"
+            }
+           ]
+          ]
+         }
+        }
+       ],
+       "Version": "2012-10-17"
+      },
+      "PolicyName": "SSMPolicy"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/OtelCollector/TaskRole/Resource"
+   }
+  },
+  "OtelCollectorLogGroup35AE2EF9": {
+   "Type": "AWS::Logs::LogGroup",
+   "Properties": {
+    "LogGroupName": "/aws/ecs/otel-collector",
+    "RetentionInDays": 7
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/OtelCollector/LogGroup/Resource"
+   }
+  },
+  "OtelCollectorTaskDef6D88E9FC": {
+   "Type": "AWS::ECS::TaskDefinition",
+   "Properties": {
+    "ContainerDefinitions": [
+     {
+      "Command": [
+       "--config=env:OTEL_CONFIG"
+      ],
+      "Environment": [
+       {
+        "Name": "HONEYCOMB_ENDPOINT",
+        "Value": "https://api.honeycomb.io"
+       },
+       {
+        "Name": "HONEYCOMB_API_KEY",
+        "Value": "CbUVTd7D7rrdzvcV1FOu8B"
+       },
+       {
+        "Name": "HONEYCOMB_DATASET",
+        "Value": "otel-collector"
+       }
+      ],
+      "Essential": true,
+      "HealthCheck": {
+       "Command": [
+        "CMD-SHELL",
+        "curl -f http://localhost:13133/ || exit 1"
+       ],
+       "Interval": 30,
+       "Retries": 3,
+       "StartPeriod": 60,
+       "Timeout": 5
+      },
+      "Image": "otel/opentelemetry-collector-contrib:latest",
+      "LogConfiguration": {
+       "LogDriver": "awslogs",
+       "Options": {
+        "awslogs-group": {
+         "Ref": "OtelCollectorLogGroup35AE2EF9"
+        },
+        "awslogs-stream-prefix": "otel-collector",
+        "awslogs-region": "us-east-1"
+       }
+      },
+      "MemoryReservation": 512,
+      "Name": "otel-collector",
+      "PortMappings": [
+       {
+        "ContainerPort": 4317,
+        "Name": "otlp-grpc",
+        "Protocol": "tcp"
+       },
+       {
+        "ContainerPort": 4318,
+        "Name": "otlp-http",
+        "Protocol": "tcp"
+       },
+       {
+        "ContainerPort": 8888,
+        "Name": "prometheus",
+        "Protocol": "tcp"
+       },
+       {
+        "ContainerPort": 13133,
+        "Name": "health",
+        "Protocol": "tcp"
+       }
+      ],
+      "Secrets": [
+       {
+        "Name": "OTEL_CONFIG",
+        "ValueFrom": {
+         "Fn::Join": [
+          "",
+          [
+           "arn:aws:ssm:us-east-1:465062709130:parameter",
+           {
+            "Ref": "OtelConfigB7019AC4"
+           }
+          ]
+         ]
+        }
+       }
+      ]
+     }
+    ],
+    "Cpu": "512",
+    "ExecutionRoleArn": {
+     "Fn::GetAtt": [
+      "OtelCollectorExecutionRole3A949A45",
+      "Arn"
+     ]
+    },
+    "Family": "OtelEcsStackOtelCollectorTaskDef60F30C02",
+    "Memory": "1024",
+    "NetworkMode": "awsvpc",
+    "RequiresCompatibilities": [
+     "FARGATE"
+    ],
+    "TaskRoleArn": {
+     "Fn::GetAtt": [
+      "OtelCollectorTaskRoleF18C07E7",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/OtelCollector/TaskDef/Resource"
+   }
+  },
+  "OtelCollectorServiceDE6EDB69": {
+   "Type": "AWS::ECS::Service",
+   "Properties": {
+    "Cluster": {
+     "Ref": "ClusterEB0386A7"
+    },
+    "DeploymentConfiguration": {
+     "MaximumPercent": 200,
+     "MinimumHealthyPercent": 50
+    },
+    "DesiredCount": 2,
+    "EnableECSManagedTags": false,
+    "HealthCheckGracePeriodSeconds": 60,
+    "LaunchType": "FARGATE",
+    "LoadBalancers": [
+     {
+      "ContainerName": "otel-collector",
+      "ContainerPort": 4317,
+      "TargetGroupArn": {
+       "Ref": "OtelTargetGroupF7AAF47B"
+      }
+     },
+     {
+      "ContainerName": "otel-collector",
+      "ContainerPort": 4317,
+      "TargetGroupArn": {
+       "Ref": "OtelHttpTargetGroupB76D6E76"
+      }
+     }
+    ],
+    "NetworkConfiguration": {
+     "AwsvpcConfiguration": {
+      "AssignPublicIp": "DISABLED",
+      "SecurityGroups": [
+       {
+        "Fn::GetAtt": [
+         "OtelCollectorServiceSecurityGroup65FB73B9",
+         "GroupId"
+        ]
+       }
+      ],
+      "Subnets": [
+       {
+        "Ref": "VPCPrivateSubnet1Subnet8BCA10E0"
+       },
+       {
+        "Ref": "VPCPrivateSubnet2SubnetCFCDAA7A"
+       }
+      ]
+     }
+    },
+    "ServiceName": "otel-collector",
+    "TaskDefinition": {
+     "Ref": "OtelCollectorTaskDef6D88E9FC"
+    }
+   },
+   "DependsOn": [
+    "ALBGrpcListenerF89B142B",
+    "ALBHttpListener04CE8CD0",
+    "OtelCollectorTaskRoleF18C07E7"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/OtelCollector/Service/Service"
+   }
+  },
+  "OtelCollectorServiceSecurityGroup65FB73B9": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "OtelEcsStack/OtelCollector/Service/SecurityGroup",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow all outbound traffic by default",
+      "IpProtocol": "-1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "VPCB9E5F0B4"
+    }
+   },
+   "DependsOn": [
+    "OtelCollectorTaskRoleF18C07E7"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/OtelCollector/Service/SecurityGroup/Resource"
+   }
+  },
+  "OtelCollectorServiceSecurityGroupfromOtelEcsStackALBSecurityGroup3CC612AE4317C6C8B192": {
+   "Type": "AWS::EC2::SecurityGroupIngress",
+   "Properties": {
+    "Description": "Load balancer to target",
+    "FromPort": 4317,
+    "GroupId": {
+     "Fn::GetAtt": [
+      "OtelCollectorServiceSecurityGroup65FB73B9",
+      "GroupId"
+     ]
+    },
+    "IpProtocol": "tcp",
+    "SourceSecurityGroupId": {
+     "Fn::GetAtt": [
+      "ALBSecurityGroup8B8624F8",
+      "GroupId"
+     ]
+    },
+    "ToPort": 4317
+   },
+   "DependsOn": [
+    "OtelCollectorTaskRoleF18C07E7"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/OtelCollector/Service/SecurityGroup/from OtelEcsStackALBSecurityGroup3CC612AE:4317"
+   }
+  },
+  "OtelCollectorServiceSecurityGroupfromOtelEcsStackALBSecurityGroup3CC612AE431833C0D118": {
+   "Type": "AWS::EC2::SecurityGroupIngress",
+   "Properties": {
+    "Description": "ALB to OTLP HTTP",
+    "FromPort": 4318,
+    "GroupId": {
+     "Fn::GetAtt": [
+      "OtelCollectorServiceSecurityGroup65FB73B9",
+      "GroupId"
+     ]
+    },
+    "IpProtocol": "tcp",
+    "SourceSecurityGroupId": {
+     "Fn::GetAtt": [
+      "ALBSecurityGroup8B8624F8",
+      "GroupId"
+     ]
+    },
+    "ToPort": 4318
+   },
+   "DependsOn": [
+    "OtelCollectorTaskRoleF18C07E7"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/OtelCollector/Service/SecurityGroup/from OtelEcsStackALBSecurityGroup3CC612AE:4318"
+   }
+  },
+  "OtelCollectorServiceSecurityGroupfromOtelEcsStackALBSecurityGroup3CC612AE1313378BF76C4": {
+   "Type": "AWS::EC2::SecurityGroupIngress",
+   "Properties": {
+    "Description": "ALB to Health Check",
+    "FromPort": 13133,
+    "GroupId": {
+     "Fn::GetAtt": [
+      "OtelCollectorServiceSecurityGroup65FB73B9",
+      "GroupId"
+     ]
+    },
+    "IpProtocol": "tcp",
+    "SourceSecurityGroupId": {
+     "Fn::GetAtt": [
+      "ALBSecurityGroup8B8624F8",
+      "GroupId"
+     ]
+    },
+    "ToPort": 13133
+   },
+   "DependsOn": [
+    "OtelCollectorTaskRoleF18C07E7"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/OtelCollector/Service/SecurityGroup/from OtelEcsStackALBSecurityGroup3CC612AE:13133"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/81WbW/bNhD+LeXHgtFaY+swf1O8rjAQNIYd5MOMYDiTF/UaitT4oswT9N8HirSsJE2xIRngD4bJe3nuuePxqFkxe/9j8e4N3LszIe/OFO2KbuNB3HG4d390KGZFd92Ibcc0+E/g8R72js3ZW8ZZDX+Vf6dNf8MXt/p6teCrsFMkNmGn0W87Bi2Qgh0p8vvfjcbs2jZiKfNakLTnyoi7EbZJIMvmUl9A0OILm3sbkDNq2g+LR+bgHFV62bQfSiktOnepFxbBk9GJGj8RFgMRKT+PdWTzLXvLbk6G4GmwSK2UGiiu1iZ4vIKdwqP8KCudM4IGgNE4Lj4uV/HvWGy+stSCx1fvzFtQ7gRq/jIap8PkRGikLlxqj1bj2ENpxuVd6T2ILzVqzzcogiW//2RNaLZdJJtDSXTCUjNCcwZKmftSqcvgdyZomZnm6bDUVSS0DgrZfNsxAXqpFWlMknSzhNEaRcQ8jOKg6c+AuUDDeUbxAHzzvyN/nAJHbTaKkK9h86+C/Uejwwl9szjPwb7QaprraxilQTltvSeCVIgn4gzccxSu6BYqOI/2Qd+KJPsMNU4e+GzJfwNbQZzA7u5XvCVNsWMGgs/8Bu+H5nxhtAfSaCeyDLxB25LA7cEz73vuXB2/TyzpagUWaky8m8N65MuZG6yuQQV89i76fTNNb4TsOSpwnoQyIHegQAvSVTsrurJpFIlhVFwYkOeDDu32ca5TJZ86kfOoHzocnbJy6nAFtkI/nu5k23OCuujWRmF8zpwLNcrzPZt3rLGkBTWgSiFM0P4490KN0aEUk2HHatBQoVwZRYLQDeNhKtuXNtseOvPKrA4hkkX0ydphLKbRMurG75zvKr+P+4IE6RhwyG888WjKU6R0vzLDKxM1T4g/FUu58eAxvgJuwvUb4tRhQ6ieK1O5orsw1eHFUHk5aWCLHnXK4ue4q017rEpsZm/NPudxQOp7vkZngk2XJ3dWcN7UU3nKPQse6VfWtCTRnoNDXjqHfuOhIl1Fn8vgm+B7ro3E4qv7oZ29K97/Uvz05qsjOrNBe6qxWKf/fwDTZBeZXQwAAA=="
+   },
+   "Metadata": {
+    "aws:cdk:path": "OtelEcsStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "LoadBalancerDNS": {
+   "Description": "DNS name of the load balancer",
+   "Value": {
+    "Fn::GetAtt": [
+     "ALBAEE750D2",
+     "DNSName"
+    ]
+   }
+  },
+  "OTLPGrpcEndpoint": {
+   "Description": "OTLP gRPC endpoint",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "http://",
+      {
+       "Fn::GetAtt": [
+        "ALBAEE750D2",
+        "DNSName"
+       ]
+      },
+      ":4317"
+     ]
+    ]
+   }
+  },
+  "OTLPHttpEndpoint": {
+   "Description": "OTLP HTTP endpoint",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "http://",
+      {
+       "Fn::GetAtt": [
+        "ALBAEE750D2",
+        "DNSName"
+       ]
+      },
+      ":4318"
+     ]
+    ]
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}
