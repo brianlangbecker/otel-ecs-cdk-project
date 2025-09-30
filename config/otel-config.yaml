@@ -71,7 +71,7 @@ exporters:
     endpoint: ${HONEYCOMB_ENDPOINT}:443
     headers:
       x-honeycomb-team: ${HONEYCOMB_API_KEY}
-      x-honeycomb-dataset: otel-collector-metrics
+      x-honeycomb-dataset: otel-metrics
     retry_on_failure:
       enabled: true
       initial_interval: 5s

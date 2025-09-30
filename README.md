@@ -10,7 +10,7 @@ A complete AWS CDK project that deploys OpenTelemetry collector on ECS Fargate w
 - **Application Load Balancer** for external access
 - **CloudWatch Logs** for application and collector logs
 - **Traces sent to**: Honeycomb (auto-named by service)
-- **Metrics sent to**: Honeycomb (`otel-collector-metrics` and `collector-operations` datasets)
+- **Metrics sent to**: Honeycomb (`otel-metrics` and `collector-operations` datasets)
 - **Logs sent to**: Honeycomb (`otel-ecs-logs` dataset)
 
 ## Prerequisites
@@ -66,7 +66,7 @@ The application sends telemetry to Honeycomb across multiple datasets:
 
 - **Traces**: Auto-named by service (`otel-ecs-sample-app`)
 - **Metrics**: Two datasets
-  - `otel-collector-metrics`: Application metrics
+  - `otel-metrics`: Application metrics
   - `collector-operations`: Collector operational metrics
 - **Logs**: `otel-ecs-logs` dataset
   - Filter by `service.name` to see application-specific logs
@@ -80,9 +80,9 @@ You can also view logs in the [CloudWatch Console](https://console.aws.amazon.co
 The collector configuration is in `config/otel-config.yaml` and includes:
 
 - **Receivers**: OTLP (gRPC:4317, HTTP:4318), Prometheus (8888)
-- **Exporters**:
+- **Exporters**: 
   - Honeycomb traces (no dataset header - auto-named by service)
-  - Honeycomb metrics (`otel-collector-metrics` and `collector-operations` datasets)
+  - Honeycomb metrics (`otel-metrics` and `collector-operations` datasets)
   - Honeycomb logs (`otel-ecs-logs` dataset)
   - Logging (debug output)
 - **Processors**: Memory limiter, Resource (deployment.environment only), Batch
