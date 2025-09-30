@@ -108,9 +108,9 @@ export class OtelCollectorConstruct extends Construct {
         }
       ],
       healthCheck: {
-        command: ['CMD-SHELL', 'curl -f http://localhost:13133/ || exit 1'],
+        command: ['CMD-SHELL', '/bin/sh -c "exec 3<>/dev/tcp/localhost/13133 && echo -e \\"GET / HTTP/1.1\\r\\nHost: localhost\\r\\n\\r\\" >&3 && cat <&3" || exit 1'],
         interval: Duration.seconds(30),
-        timeout: Duration.seconds(5),
+        timeout: Duration.seconds(10),
         retries: 3,
         startPeriod: Duration.seconds(60)
       }

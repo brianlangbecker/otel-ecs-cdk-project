@@ -1,76 +1,166 @@
-# OpenTelemetry Collector on ECS with CDK
+# OpenTelemetry ECS CDK Project
 
-> ⚠️ **WORK IN PROGRESS** ⚠️  
-> 
-> This project is currently under active development. Expect:
-> - Configuration changes and breaking updates
-> - Incomplete documentation  
-> - Potential bugs and issues
-> - Testing and validation in progress
-> 
-> **DO NOT use in production environments without thorough testing!**
+A complete AWS CDK project that deploys OpenTelemetry collector on ECS Fargate with a sample instrumented application, sending traces, metrics, and logs to Honeycomb.
 
-## Overview
+## Architecture
 
-This project converts a Kubernetes Helm chart deployment of OpenTelemetry Collector to run on Amazon ECS using AWS CDK, with data flowing to Honeycomb.
+- **ECS Fargate Service** with 2 containers:
+  - **AWS OTEL Collector** (sidecar pattern)
+  - **Sample Node.js App** (with OpenTelemetry auto-instrumentation)
+- **Application Load Balancer** for external access
+- **CloudWatch Logs** for application and collector logs
+- **Traces sent to**: Honeycomb (auto-named by service)
+- **Metrics sent to**: Honeycomb (`otel-collector-metrics` and `collector-operations` datasets)
+- **Logs sent to**: Honeycomb (`otel-ecs-logs` dataset) with trace correlation
 
-## Project Status
+## Prerequisites
 
-- ✅ Basic ECS deployment with CDK
-- ✅ Honeycomb integration configured
-- ✅ Load balancer with both gRPC (4317) and HTTP (4318) endpoints
-- ✅ Test scripts for validation
-- ✅ Multiple Honeycomb datasets (traces, metrics, operations)
-- 🚧 OTEL configuration stability in progress
-- 🚧 Production hardening ongoing
-- ❌ Production readiness - NOT READY
+- AWS CLI configured with appropriate permissions
+- Node.js 18+ and npm
+- Docker running locally
+- CDK CLI: `npm install -g aws-cdk`
 
 ## Quick Start
 
-**Prerequisites:** Node.js, AWS CLI configured, Honeycomb API key
+### 1. Configure Honeycomb API Key
+
+**IMPORTANT**: Update your Honeycomb API key in the CDK stack:
+
+```typescript
+// File: lib/otel-ecs-cdk-project-stack.ts
+// Line ~85: Update the HONEYCOMB_API_KEY value
+environment: {
+  HONEYCOMB_ENDPOINT: 'https://api.honeycomb.io',
+  HONEYCOMB_API_KEY: 'YOUR_HONEYCOMB_API_KEY_HERE', // ← Update this!
+},
+```
+
+### 2. Deploy
 
 ```bash
 # Install dependencies
-pnpm install
+npm install
 
-# Configure Honeycomb API key in lib/otel-ecs-cdk-project-stack.ts
-honeycombApiKey: 'your-api-key-here'
-honeycombDataset: 'your-dataset-name'
+# Deploy the stack
+./scripts/deploy.sh
 
-# Deploy (at your own risk!)
-npm run build
-npx cdk deploy
-
-# Test the deployment
-./scripts/test-all.sh
+# Or manually:
+npx cdk deploy --require-approval never
 ```
 
-## Documentation
+### 3. Test the Application
 
-- [Deployment Guide](README-DEPLOYMENT.md) - Detailed setup instructions
-- [Honeycomb Setup](HONEYCOMB-SETUP.md) - API key and configuration
-- [Testing Guide](TESTING.md) - Test scripts and validation
+After deployment, test the endpoints using the ALB DNS name from the CDK output:
 
-## Available Commands
+```bash
+# Get the ALB DNS name from CDK output, then test:
+curl http://YOUR-ALB-DNS-NAME/
+curl http://YOUR-ALB-DNS-NAME/health
+curl http://YOUR-ALB-DNS-NAME/api/users
+curl http://YOUR-ALB-DNS-NAME/api/error
+```
 
-### CDK Commands
-* `npm run build`   compile typescript to js
-* `npm run watch`   watch for changes and compile
-* `npm run test`    perform the jest unit tests
-* `npx cdk deploy`  deploy this stack to your default AWS account/region
-* `npx cdk diff`    compare deployed stack with current state
-* `npx cdk synth`   emits the synthesized CloudFormation template
+### 4. View Telemetry in Honeycomb
 
-### Test Scripts
-* `./scripts/test-all.sh [ALB-DNS]` - Run comprehensive tests
-* `./scripts/test-otlp-traces.sh <ALB-DNS>` - Test trace endpoint
-* `./scripts/test-otlp-metrics.sh <ALB-DNS>` - Test metrics endpoint
-* `./scripts/check-deployment.sh` - Check ECS deployment status
+The application sends telemetry to Honeycomb across multiple datasets:
 
-## Contributing
+- **Traces**: Auto-named by service (`otel-ecs-sample-app`)
+- **Metrics**: Two datasets
+  - `otel-collector-metrics`: Application metrics
+  - `collector-operations`: Collector operational metrics
+- **Logs**: `otel-ecs-logs` dataset with full trace correlation
+  - Logs are automatically linked to their parent traces
+  - Filter by `service.name` to see application-specific logs
 
-This is a work-in-progress project. Issues and PRs welcome, but expect rapid changes and potential conflicts.
+You can also view logs in the [CloudWatch Console](https://console.aws.amazon.com/cloudwatch/home)
 
-## Disclaimer
+## Configuration
 
-This project is experimental and not suitable for production use. Use at your own risk.
+### OpenTelemetry Collector Config
+
+The collector configuration is in `config/otel-config.yaml` and includes:
+
+- **Receivers**: OTLP (gRPC:4317, HTTP:4318), Prometheus (8888)
+- **Exporters**: 
+  - Honeycomb traces (no dataset header - auto-named by service)
+  - Honeycomb metrics (`otel-collector-metrics` and `collector-operations` datasets)
+  - Honeycomb logs (`otel-ecs-logs` dataset)
+  - Logging (debug output)
+- **Processors**: Memory limiter, Resource (deployment.environment only), Batch
+- **Key Feature**: Resource processor does NOT overwrite application `service.name` attributes
+
+### Sample Application
+
+The Node.js sample app (`sample-app/`) demonstrates:
+
+- Auto-instrumentation with OpenTelemetry
+- HTTP requests automatically traced
+- Custom error simulation endpoint
+- Traces sent to the OTEL collector sidecar
+
+## Cleanup
+
+```bash
+# Remove all AWS resources
+./scripts/cleanup.sh
+
+# Or manually:
+npx cdk destroy --force
+```
+
+## Project Structure
+
+```
+├── lib/                          # CDK stack definition
+├── sample-app/                   # Sample Node.js application
+├── config/otel-config.yaml      # OpenTelemetry collector config
+├── scripts/                     # Deployment scripts
+│   ├── deploy.sh               # Deploy the stack
+│   └── cleanup.sh              # Clean up resources
+└── README.md                   # This file
+```
+
+## Key Features
+
+- ✅ **Production-ready**: Uses AWS Distro for OpenTelemetry (ADOT)
+- ✅ **Sidecar pattern**: Collector runs alongside application
+- ✅ **Auto-instrumentation**: Zero-code tracing for Node.js
+- ✅ **Honeycomb Integration**: Sends traces, metrics, and logs to Honeycomb
+- ✅ **Trace-Log Correlation**: Logs automatically linked to traces via trace_id and span_id
+- ✅ **Service Name Preservation**: Application service names preserved through the collector
+- ✅ **Scalable**: ECS Fargate with ALB and auto-scaling ready
+- ✅ **Observable**: Comprehensive logging and metrics
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Honeycomb API Key**: Make sure to update the API key in `lib/otel-ecs-cdk-project-stack.ts` (line ~87)
+2. **Config Changes Not Applied**: After updating `config/otel-config.yaml`, you must redeploy the stack for changes to take effect. The config is stored in SSM Parameter Store and loaded by ECS tasks at startup.
+3. **Service Name Changes**: To see updated service names in Honeycomb, force a new ECS deployment:
+   ```bash
+   aws ecs update-service --cluster otel-xray-cluster --service otel-xray-service --force-new-deployment --region us-east-1
+   ```
+4. **AWS Permissions**: Ensure your AWS CLI has ECS, CloudWatch, and SSM permissions
+5. **Docker**: Make sure Docker is running for CDK asset building
+6. **502/504 Errors**: Wait a few minutes after deployment for services to become healthy
+7. **SSM Parameter Size**: The OTel config must be under 4KB. If needed, remove comments or use multiple parameters.
+
+### Viewing Logs
+
+```bash
+# Application logs
+aws logs tail /ecs/aws-otel-emitter --follow
+
+# Collector logs
+aws logs tail /ecs/ecs-aws-otel-sidecar-collector --follow
+```
+
+## Support
+
+This project demonstrates AWS best practices for OpenTelemetry deployment on ECS. For production use, consider:
+
+- Using AWS Secrets Manager for API keys
+- Implementing proper monitoring and alerting
+- Adding custom metrics and traces to your applications
+- Configuring appropriate resource limits and auto-scaling

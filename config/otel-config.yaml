@@ -1,20 +1,12 @@
-# OpenTelemetry Collector Configuration for ECS/Honeycomb
-# Adapted from working configuration template
-
 extensions:
   pprof:
     endpoint: 0.0.0.0:1777
-  
-  # Debug logging extension
   zpages:
     endpoint: 0.0.0.0:55679
-  
-  # Health check extension
   health_check:
     endpoint: 0.0.0.0:13133
 
 receivers:
-  # Prometheus receiver for scraping collector metrics
   prometheus:
     config:
       scrape_configs:
@@ -53,25 +45,18 @@ processors:
 
   resource:
     attributes:
-      - key: service.name
-        value: "otel-collector-ecs"
-        action: upsert
       - key: deployment.environment
         value: "production"
         action: upsert
 
 exporters:
-  # Debug exporter to see what data is flowing
-  debug:
-    verbosity: detailed
-
-  # Direct Honeycomb trace exporter
+  logging:
+    loglevel: debug
   otlp/honeycomb_direct_traces:
     compression: gzip
     endpoint: ${HONEYCOMB_ENDPOINT}:443
     headers:
       x-honeycomb-team: ${HONEYCOMB_API_KEY}
-      x-honeycomb-dataset: ${HONEYCOMB_DATASET}
     retry_on_failure:
       enabled: true
       initial_interval: 5s
@@ -81,8 +66,6 @@ exporters:
       enabled: true
     tls:
       insecure: false
-
-  # Direct Honeycomb metrics exporter
   otlp/honeycomb_direct_metrics:
     compression: gzip
     endpoint: ${HONEYCOMB_ENDPOINT}:443
@@ -98,14 +81,27 @@ exporters:
       enabled: true
     tls:
       insecure: false
-
-  # Collector operational metrics exporter
   otlp/honeycomb_collector_metrics:
     compression: gzip
     endpoint: ${HONEYCOMB_ENDPOINT}:443
     headers:
       x-honeycomb-team: ${HONEYCOMB_API_KEY}
       x-honeycomb-dataset: collector-operations
+    retry_on_failure:
+      enabled: true
+      initial_interval: 5s
+      max_elapsed_time: 300s
+      max_interval: 30s
+    sending_queue:
+      enabled: true
+    tls:
+      insecure: false
+  otlp/honeycomb_direct_logs:
+    compression: gzip
+    endpoint: ${HONEYCOMB_ENDPOINT}:443
+    headers:
+      x-honeycomb-team: ${HONEYCOMB_API_KEY}
+      x-honeycomb-dataset: otel-ecs-logs
     retry_on_failure:
       enabled: true
       initial_interval: 5s
@@ -126,7 +122,6 @@ service:
     metrics:
       level: detailed
   pipelines:
-    # Application traces pipeline
     traces:
       receivers:
         - otlp
@@ -135,10 +130,8 @@ service:
         - resource
         - batch
       exporters:
-        - debug
+        - logging
         - otlp/honeycomb_direct_traces
-
-    # Application metrics pipeline
     metrics:
       receivers:
         - otlp
@@ -146,15 +139,23 @@ service:
         - memory_limiter
         - batch
       exporters:
-        - debug
+        - logging
         - otlp/honeycomb_direct_metrics
-
-    # Collector operational metrics pipeline
     metrics/collector_operations:
       receivers:
         - prometheus
       processors:
         - batch
       exporters:
-        - debug
+        - logging
         - otlp/honeycomb_collector_metrics
+    logs:
+      receivers:
+        - otlp
+      processors:
+        - memory_limiter
+        - resource
+        - batch
+      exporters:
+        - logging
+        - otlp/honeycomb_direct_logs
