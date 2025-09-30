@@ -11,7 +11,7 @@ A complete AWS CDK project that deploys OpenTelemetry collector on ECS Fargate w
 - **CloudWatch Logs** for application and collector logs
 - **Traces sent to**: Honeycomb (auto-named by service)
 - **Metrics sent to**: Honeycomb (`otel-collector-metrics` and `collector-operations` datasets)
-- **Logs sent to**: Honeycomb (`otel-ecs-logs` dataset) with trace correlation
+- **Logs sent to**: Honeycomb (`otel-ecs-logs` dataset)
 
 ## Prerequisites
 
@@ -68,8 +68,7 @@ The application sends telemetry to Honeycomb across multiple datasets:
 - **Metrics**: Two datasets
   - `otel-collector-metrics`: Application metrics
   - `collector-operations`: Collector operational metrics
-- **Logs**: `otel-ecs-logs` dataset with full trace correlation
-  - Logs are automatically linked to their parent traces
+- **Logs**: `otel-ecs-logs` dataset
   - Filter by `service.name` to see application-specific logs
 
 You can also view logs in the [CloudWatch Console](https://console.aws.amazon.com/cloudwatch/home)
@@ -81,7 +80,7 @@ You can also view logs in the [CloudWatch Console](https://console.aws.amazon.co
 The collector configuration is in `config/otel-config.yaml` and includes:
 
 - **Receivers**: OTLP (gRPC:4317, HTTP:4318), Prometheus (8888)
-- **Exporters**: 
+- **Exporters**:
   - Honeycomb traces (no dataset header - auto-named by service)
   - Honeycomb metrics (`otel-collector-metrics` and `collector-operations` datasets)
   - Honeycomb logs (`otel-ecs-logs` dataset)
@@ -126,7 +125,6 @@ npx cdk destroy --force
 - ✅ **Sidecar pattern**: Collector runs alongside application
 - ✅ **Auto-instrumentation**: Zero-code tracing for Node.js
 - ✅ **Honeycomb Integration**: Sends traces, metrics, and logs to Honeycomb
-- ✅ **Trace-Log Correlation**: Logs automatically linked to traces via trace_id and span_id
 - ✅ **Service Name Preservation**: Application service names preserved through the collector
 - ✅ **Scalable**: ECS Fargate with ALB and auto-scaling ready
 - ✅ **Observable**: Comprehensive logging and metrics
